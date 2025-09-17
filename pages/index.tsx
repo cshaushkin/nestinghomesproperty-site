@@ -13,8 +13,19 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Lead submit", form)
-    setSubmitted(true)
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      const data = await r.json()
+      if (!r.ok) throw new Error(data?.error || "Submit failed")
+      setSubmitted(true)
+    } catch (err) {
+      alert("There was a problem submitting your message. Please try again.")
+      console.error(err)
+    }
   }
 
   const jsonLd = {
@@ -36,7 +47,6 @@ export default function Home() {
     areaServed: ["El Segundo", "Downey", "Highland Park", "Fullerton"],
   }
 
-  // --- Simple inline styles ---
   const container: React.CSSProperties = { maxWidth: "800px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif", lineHeight: 1.5 }
   const input: React.CSSProperties = { display: "block", width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }
   const button: React.CSSProperties = { padding: "10px 16px", border: "none", borderRadius: "4px", backgroundColor: "#f59e0b", color: "white", cursor: "pointer" }
@@ -53,6 +63,7 @@ export default function Home() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
 
+      {/* Contact / Lead Form */}
       <section>
         <h2>Let’s Talk</h2>
         <p>Tell us about your rental property and goals. We’ll send a custom plan.</p>
@@ -67,13 +78,45 @@ export default function Home() {
         </form>
       </section>
 
+      {/* About Us */}
       <section>
-        <h3>Contact Info</h3>
-        <p><strong>Nesting Homes Property Management</strong></p>
-        <p>531 Main Street, PMB 963, El Segundo, CA 90291</p>
-        <p><a href="tel:+13109228202">(310) 922-8202</a></p>
-        <p><a href="mailto:hello@nestinghomesproperty.com">hello@nestinghomesproperty.com</a></p>
-        <p>DRE #00000000 • Equal Housing Opportunity</p>
+        <h2>About Us</h2>
+        <p>
+          Nesting Homes Property Management is a local, hands-on team based in El Segundo, serving nearby communities
+          across the South Bay and greater Los Angeles. We focus on clear communication, fast maintenance response, and
+          reliable tenant placement so owners can be hands-off while residents feel right at home.
+        </p>
+        <p>
+          Services include leasing, tenant screening, rent collection, maintenance coordination, inspections, and
+          transparent monthly reporting. Ask about our simple, flat-rate pricing for single-family homes, condos, and
+          small multifamily buildings.
+        </p>
+        <ul>
+          <li><strong>Office:</strong> 531 Main Street, PMB 963, El Segundo, CA 90291</li>
+          <li><strong>Phone:</strong> <a href="tel:+13109228202">(310) 922-8202</a></li>
+          <li><strong>Email:</strong> <a href="mailto:hello@nestinghomesproperty.com">hello@nestinghomesproperty.com</a></li>
+          <li><strong>Areas Served:</strong> El Segundo, Downey, Highland Park, Fullerton, and nearby neighborhoods</li>
+        </ul>
+      </section>
+
+      {/* Current Listings */}
+      <section>
+        <h2>Current Listings</h2>
+        <p>Below is our current available property. For more details and photos, view the full listing.</p>
+        <div style={{ border: "1px solid #ddd", borderRadius: 4, padding: 12, marginBottom: 12 }}>
+          <h4 style={{ margin: 0 }}>Venice Beach Apartment</h4>
+          <div>36 Brooks Ave, Venice, CA</div>
+          <div>
+            <strong>Link:</strong>{" "}
+            <a
+              href="https://www.apartments.com/36-brooks-ave-venice-ca/t8zgtjb/?utm_source=shared_listing&utm_medium=direct"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on Apartments.com
+            </a>
+          </div>
+        </div>
       </section>
 
       <footer style={footer}>
